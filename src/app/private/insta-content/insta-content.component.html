@@ -1,0 +1,148 @@
+<ol *ngIf="instaUsers" class="breadcrumb">
+	<li class="breadcrumb-item">Content</li>
+	<li class="breadcrumb-menu d-md-down-none">
+		<a *ngFor="let instaUser of instaUsers" class="btn" href="javascript:void(0)" (click)="instaProfile(instaUser)"> 
+			<img src="{{instaUser.profilePictureURI}}" 
+				[ngClass]="instaUser.id === currentForAvatar.id ? 'img-avatar-insta img-avatar-insta-curr' : 'img-avatar-insta'" />
+		</a> 
+	</li>
+</ol>
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="card">
+		<div class="card-body card-main">
+			<section>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-header">Top 5 most liked media</div>
+							<div class="card-body">
+								<table class="table table-responsive-sm table-outline mb-0">
+									<tbody>
+										<div *ngIf="topTenLikesLoading; then phTopTenLikes else topTenLikes"></div>
+										<ng-template #phTopTenLikes>
+											<div class="loading-placeholder">
+												<ngx-loading [show]="topTenLikesLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+											</div>
+										</ng-template>
+										<ng-template #topTenLikes>
+											<tr *ngFor="let instaMedia of topTenLikesMedia">
+												<td class="text-center">
+													<div class="top-avatar">
+														<img class="top-img-avatar" src="{{instaMedia.uriLow}}">
+													</div>
+												</td>
+												<td>
+													<div class="span-space text-muted"><i class="fa fa-heart"></i> {{instaMedia.likesCount}}</div>
+												</td>
+												<td>
+													<div class="span-space text-muted"><i class="fa fa-clock"></i> {{instaMedia.createdTimestamp}}</div>
+												</td>
+											</tr>
+										</ng-template>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card">
+							<div class="card-header">Top 5 most comments media</div>
+							<div class="card-body">
+								<table class="table table-responsive-sm table-outline mb-0">
+									<tbody>
+										<div *ngIf="topTenCommentsLoading; then phTopTenComments else topTenComments"></div>
+										<ng-template #phTopTenComments>
+											<div class="loading-placeholder">
+												<ngx-loading [show]="topTenCommentsLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+											</div>
+										</ng-template>
+										<ng-template #topTenComments>
+											<tr *ngFor="let instaMedia of topTenCommentsMedia">
+												<td class="text-center">
+													<div class="top-avatar">
+														<img class="top-img-avatar" src="{{instaMedia.uriLow}}">
+													</div>
+												</td>
+												<td>
+													<div class="span-space text-muted"><i class="fa fa-comment"></i> {{instaMedia.commentsCount}}</div>
+												</td>
+												<td>
+													<div class="span-space text-muted"><i class="fa fa-clock"></i> {{instaMedia.createdTimestamp}}</div>
+												</td>
+											</tr>
+										</ng-template>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header">Media History</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-4">
+										<h3>Last published media</h3>
+										<div *ngIf="lastMedia">
+											<img src="{{lastMedia.uriLow}}" class="card-img-top insta-img insta-img-cover" />
+											<p class="card-title">
+												<span class="span-space text-muted"><i class="fa fa-heart color-red"></i> {{lastMedia.likesCount}}</span>
+												<span class="text-muted"><i class="fa fa-comment"></i> {{lastMedia.commentsCount}}</span><br>
+												<span class="text-muted small">{{lastMedia.createdTimestamp}}</span>
+											</p>
+										</div>
+									</div> 
+									<div class="col-md-8">
+										<div class="card card-chart">
+											<div class="card-body">
+												<div class="row" style="margin-bottom: 20px;">
+													<div class="col-sm-12 d-none d-md-block">
+														<div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+															<label btnradio="Last 7 Days" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" id="followersGroDay" 
+																(click)="updateMediaHistory('day')" aria-pressed="true"
+																[ngClass]="{active: periodMediaHistoryLabel === 'day'}">Last 7 Days
+															</label>
+															<label btnradio="Current Month" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+																id="followersGroMonth" aria-pressed="false" (click)="updateMediaHistory('month')" aria-pressed="false"
+																[ngClass]="{active: periodMediaHistoryLabel === 'month'}">Current Month
+															</label>
+															<label btnradio="Current Year" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+																id="followersGroYear" aria-pressed="false" (click)="updateMediaHistory('year')" aria-pressed="false"
+																[ngClass]="{active: periodMediaHistoryLabel === 'year'}">Current Year
+															</label>
+														</div> 
+													</div> 
+												</div>
+												<div *ngIf="mediaHistoryLoading; then phMediaStats else mediaStats"></div>
+												<ng-template #phMediaStats>
+													<div class="loading-placeholder">
+														<ngx-loading [show]="mediaHistoryLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+													</div>
+												</ng-template>
+												<ng-template #mediaStats>
+													<div *ngIf="mediaHistoryLabels.length > 0">
+														<canvas 
+															baseChart
+															[chartType]="'line'"
+															[datasets]="mediaHistoryData"
+															[labels]="mediaHistoryLabels"
+															[options]="lineChartOpt"
+															[colors] = "chartColors"
+															[legend]="false">
+														</canvas>
+													</div>
+												</ng-template>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>

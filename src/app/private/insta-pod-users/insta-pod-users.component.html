@@ -1,0 +1,80 @@
+<div class="container-fluid" style="margin-top: 20px;">
+<div class="card">
+	<div class="card-header">
+		<strong>Instagram Pod Users</strong>
+		<button class="btn btn-success btn-sm float-right" (click)="openCreatePodUser(content4)"><i class="fa fa-plus"></i>  Add User</button>
+	</div>
+	<div class="card-body card-main">
+		<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+		<section *ngIf="usersPage">
+			<div class="row">
+				<div class="col-md-6">
+					<table class="table table-striped table-sm">
+						<thead>
+							<tr class="table-info">
+								<th>Profile Picture</th>
+								<th class="text-center">Username</th>
+								<th class="text-right">Functions</th>
+							</tr>
+						</thead>
+						<tbody>
+						    <tr *ngFor="let user of usersPage.content">
+						    	<td class="text-center">
+								  	<img src="{{user.profilePicture}}" class="img-avatar-insta img-avatar-insta-curr margin-right-m10 margin-top-5" placement="top" ngbTooltip="{{user.username}}"/>
+								</td>
+								<td class="text-center"> 
+								  	{{user.username}}
+								</td>
+								<td class="text-right">
+									<button class="btn btn-outline-warning btn-sm margin-right-5" (click)="openUpdatePodUser(content4, user)"><i class="fa fa-pencil"></i></button>
+									<button class="btn btn-outline-danger btn-sm margin-right-5" (click)="deletePodUser"><i class="fa fa-times"></i></button>
+								</td>
+						    </tr>
+						</tbody>
+					</table>
+					<ngb-pagination (pageChange)="onPageChange($event)" [collectionSize]="usersPage.totalElements" 
+						[pageSize]="usersPage.size" 
+						[maxSize]="5" [boundaryLinks]="true"></ngb-pagination>
+				</div>
+			</div>
+		</section>
+	</div> 
+</div>
+<ng-template #content4 let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Pod User</h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #createPodUserForm="ngForm" (ngSubmit)="managePodUser(createPodUserForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>Username</label>
+							<input id="username" type="text" class="form-control form-control-sm" 
+							[ngModel]="currentUser && currentUser.username" required name="username">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>Profile picture url</label>
+							<input id="profilePicture" type="text" class="form-control form-control-sm" 
+							[ngModel]="currentUser && currentUser.profilePicture" required name="profilePicture">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success margin-right-5" [disabled]="!createPodUserForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+</div>

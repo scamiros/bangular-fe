@@ -1,0 +1,169 @@
+<div class="container-fluid" style="margin-top: 20px;">
+<div class="card">
+	<div class="card-header">
+		<strong>{{currentMonth?.option}}</strong>
+		<form name="form" #moneyMonthsForm="ngForm" class="form-inline float-right">
+			<div class="form-group">
+				<label>Current Month</label> 
+				<select [compareWith]="compareFn" class="form-control form-control-sm mx-sm-3" id="currentMonth" required name="currentMonth" 
+					(ngModelChange)="onDateChange($event)" [ngModel]="currentMonth">
+					<option *ngFor="let month of moneyMonths" [ngValue]="month"
+					>{{month.option}}</option>
+				</select>
+			</div>
+		</form>
+		<div class="btn-group btn-margin btn-group-toggle mr-3 float-right" data-toggle="buttons">
+			<label btnradio="cat" class="btn btn-sm btn-outline-primary ng-valid ng-touched ng-dirty"
+				(click)="updateCategories(currentMonth)"
+				[ngClass]="{active: viewType === 'cat'}"><i class="fa fa-file-text-o"></i>
+			</label>
+			<label btnradio="list" class="btn btn-sm btn-outline-primary ng-valid ng-touched ng-dirty" 
+				(click)="updateCategoriesList(currentMonth)"
+				[ngClass]="{active: viewType === 'list'}"><i class="fa fa-list"></i>
+			</label>
+		</div>
+		<button class="btn btn-info btn-sm float-right btn-margin" (click)="goToDashboard()"><i class="fa fa-arrow-left"></i>  Dashboard</button>
+	</div>
+	<div class="card-body card-main">
+		<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+		<section *ngIf="moneyCategories">
+			<div *ngIf="viewType == 'cat'; then cats else lists"></div>
+			<ng-template #lists>
+				<div class="row">
+					<div class="col-md-12">
+						<ngx-datatable class="bootstrap fullscreen"
+					        [rows]="listTransactions"
+					        [columnMode]="'force'"
+					        [rowHeight]="40"
+					        [headerHeight]="40"
+        					[footerHeight]="40"
+        					[summaryRow]="true"
+       	 					[summaryPosition]="'bottom'"
+       	 					[rowHeight]="'auto'">
+       	 					
+       	 					<ngx-datatable-column prop="dtTransaction" [width]="100">
+					            <ng-template let-column="column" ngx-datatable-header-template>
+					                Data
+					            </ng-template>
+					            <ng-template let-value="value" ngx-datatable-cell-template>
+					                {{value | date: 'shortDate'}}
+					            </ng-template>
+					        </ngx-datatable-column>
+        					<ngx-datatable-column prop="transaction">
+					            <ng-template let-column="column" ngx-datatable-header-template>
+					                Transazione
+					            </ng-template>
+					        </ngx-datatable-column>
+					        <ngx-datatable-column prop="category">
+					            <ng-template let-column="column" ngx-datatable-header-template>
+					                Categoria
+					            </ng-template>
+					        </ngx-datatable-column>
+					      	<ngx-datatable-column prop="amount" [width]="60">
+					            <ng-template let-column="column" ngx-datatable-header-template>
+					                <span class="float-right">Spesa</span>
+					            </ng-template>
+					            <ng-template let-value="value" ngx-datatable-cell-template>
+					                <span class="float-right">{{value | currency:'EUR':"symbol"}}</span>
+					            </ng-template>
+					      	</ngx-datatable-column>
+					    </ngx-datatable>
+					</div>
+				</div>
+			</ng-template>
+			<ng-template #cats>
+				<div class="row">
+					<div *ngFor="let category of moneyCategories" class="col-md-4">
+						<div class="card min-height-260">
+		                    <div class="card-header">
+		                    	<strong>{{category.category}}</strong>
+		                    	<!-- <button ngConfirm [title]="'Confirm'" [message]="'Are you sure delete category ' + category.category + '?'" (onConfirm)="deleteCategory(category)"
+		  						 class="btn btn-outline-danger btn-sm float-right">
+		  						<i class="fa fa-times"></i>
+		 					  </button> -->
+		                      <button class="btn btn-outline-success btn-sm float-right btn-margin" (click)="openNewTransaction(content, category)"><i class="fa fa-plus"></i></button>
+		                      <button href="#" *ngIf="category.more" class="btn btn-outline-primary btn-sm float-right btn-margin" (click)="viewAll(category)">Vedi tutte</button>
+		                    </div>
+		                    <div class="card-body">
+		                    	<table class="table table-sm">
+									<tbody>
+									    <tr *ngFor="let transaction of category.mtransactions">
+									    	<td>
+											  	{{transaction.dtTransaction | date:'shortDate'}}
+											</td>
+									    	<td>
+											  	{{transaction.transaction}}
+											</td> 
+											<td class="text-right">
+											  	{{transaction.amount | currency:'EUR':"symbol"}}
+											</td>
+											<td class="text-right" style="width: 10px;">
+											  	<!-- <button ngConfirm [title]="'Confirm'" [message]="'Are you sure delete transaction ' + transaction.transaction + '?'" (onConfirm)="deleteTransaction(transaction)"
+							  						 class="btn btn-outline-danger btn-xsm">
+							  						<i class="fa fa-times"></i>
+							 					  </button> -->
+											</td>
+									    </tr>
+									    <tr>
+									      <td colspan="2"><strong>TOTALE</strong></td>
+									      <td class="text-right">
+									      <span class="badge badge-info badge-text">
+									      	{{category.spesa | currency:'EUR':"symbol"}}
+									      </span>
+									      </td>
+									    </tr>
+									</tbody>
+								</table>
+		                    </div>
+		                 </div>
+					</div>
+				</div>
+			</ng-template>
+		</section>
+	</div>
+</div>
+
+<ng-template #content let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Add Transaction to the Category {{currentCategory.category}}</h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #newTransactionForm="ngForm" (ngSubmit)="createTransaction(newTransactionForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>Description</label>
+							<input id="desc" type="text" class="form-control form-control-sm" ngModel required name="desc">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Date</label>
+							<input id="dateTransaction" type="text" class="form-control form-control-sm" ngModel required name="dateTransaction" 
+								bsDatepicker [minDate]="minDate" [maxDate]="maxDate" [bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>Amount</label>
+							<input id="amount" type="number" class="form-control form-control-sm" ngModel required name="amount">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success btn-margin" [disabled]="!newTransactionForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+</ng-template>
+</div>

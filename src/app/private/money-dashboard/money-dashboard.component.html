@@ -1,0 +1,268 @@
+<div class="container-fluid" style="margin-top: 20px;">
+<div class="card">
+	<div class="card-header">
+		<strong>{{moneyDashboard?.etichetta}}</strong>
+		<form name="form" #moneyMonthsForm="ngForm" class="form-inline float-right">
+			<div class="form-group">
+				<label>Current Month</label> 
+				<select [compareWith]="compareFn" class="form-control form-control-sm mx-sm-3" id="currentMonth" required name="currentMonth" 
+					(ngModelChange)="onDateChange($event)" [ngModel]="currentMonth">
+					<option *ngFor="let month of moneyMonths" [ngValue]="month">{{month.option}}</option>
+				</select>
+			</div>
+		</form>
+		<button class="btn btn-danger btn-sm float-right btn-margin" (click)="goToCategories()"><i class="fa fa-arrow-right"></i>  Categories</button>
+		<button class="btn btn-success btn-sm float-right btn-margin" (click)="openNewCategory(content)"><i class="fa fa-plus"></i>  Add Category</button>
+		<button [hidden]="!emptyCategories" class="btn btn-sm btn-primary float-right btn-margin" (click)="openNewMonth(content)"><i class="fa fa-arrow-up"></i>  Import Categories</button>
+		<!--  <button class="btn btn-sm btn-primary float-right" (click)="openNewMonth(content)"><i class="fa fa-plus"></i>  Add Month</button>-->
+		
+	</div>
+	<div class="card-body card-main">
+		<section *ngIf="moneyDashboard">
+		<ngx-loading [hidden]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+		<div class="row">
+			<div class="col-md-3">
+				<table class="table table-sm">
+					<tbody>
+						<tr>
+					      <th>Saldo</th>
+					      <th class="text-right">
+					      	<button class="btn btn-outline-info btn-sm btn-margin" (click)="openSetSaldo(content2)"><i class="fa fa-check"></i></button>
+					      	<span class="badge badge-warning badge-text">{{moneyDashboard.saldoPartenza | currency:'EUR':"symbol"}}</span></th>
+					    </tr>
+					    <tr *ngFor="let entrate of moneyDashboard.entrateList">
+					    	<td>
+							  	{{entrate.descrizione}}
+							</td>
+							<td class="text-right">
+							  	{{entrate.valore | currency:'EUR':"symbol"}}
+							</td>
+					    </tr>
+					    <tr>
+					      <th>Entrate</th>
+					      <th class="text-right">
+					      	<span class="badge badge-info badge-text">{{moneyDashboard.entrate | currency:'EUR':"symbol"}}</span></th>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-5">
+				<table class="table table-sm">
+					<thead>
+						<tr>
+							<th class="text-left">Categoria</th>
+							<th class="text-right"></th>
+							<th class="text-left">Budget</th>
+							<th class="text-right">Spese</th>
+							<th class="text-right">Bilancio</th>
+						</tr>
+					</thead>
+					<tbody>
+					    <tr *ngFor="let category of moneyDashboard.categoriesList">
+					    	<td>
+							  	{{category.category}}
+							</td>
+							<td><button class="btn btn-outline-info btn-sm" (click)="openSetBudget(content3, category)"><i class="fa fa-pencil"></i></button></td>
+							<td class="text-left">
+							  	{{category.budget | currency:'EUR':"symbol"}}
+							</td>
+							<td class="text-right text-danger"> 
+							  	{{category.spesa | currency:'EUR':"symbol"}}
+							</td>
+							<div *ngIf="category.bilancio >= 0; then notWarn else warn"></div> 
+							<ng-template #notWarn>
+								<td class="text-right text-success">
+								  	{{category.bilancio | currency:'EUR':"symbol"}}
+								</td>
+							</ng-template>
+							<ng-template #warn>
+								<td class="text-right text-danger">
+								  	{{category.bilancio | currency:'EUR':"symbol"}}
+								</td>
+							</ng-template>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+				<table class="table table-sm">
+					<tbody>
+						<tr>
+					      <th>Stima bilancio</th>
+					      <th class="text-right">
+					      	{{moneyDashboard.stimaBilancio | currency:'EUR':"symbol"}}</th>
+					    </tr>
+					    <tr>
+					      <th>Bilancio</th>
+					      <th class="text-right">
+					      	{{moneyDashboard.bilancio | currency:'EUR':"symbol"}}</th>
+					    </tr>
+					    <tr>
+					      <th>Stima saldo</th>
+					      <th class="text-right">
+					      	<span class="badge badge-secondary badge-text">
+					      		{{moneyDashboard.stimaSaldo | currency:'EUR':"symbol"}}
+					      		</span>
+					      </th>
+					    </tr>
+					    <tr> 
+					      <th>Saldo</th>
+					      <th class="text-right">
+					      	<span class="badge badge-success badge-text">
+					      		{{moneyDashboard.saldo | currency:'EUR':"symbol"}}
+					      	</span>
+					      </th>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">
+				<table class="table table-sm">
+					<tbody>
+					    <tr>
+					      <th>Totale Entrate</th>
+					      <th class="text-right">{{moneyDashboard.totaleEntrate | currency:'EUR':"symbol"}}</th>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-5">
+				<table class="table table-sm">
+					<tbody>
+						<tr>
+					      <th>Totale Spese</th>
+					      <th class="text-right text-primary">{{moneyDashboard.totaleBudget | currency:'EUR':"symbol"}}</th>
+					      <th class="text-right text-danger">{{moneyDashboard.totaleSpese | currency:'EUR':"symbol"}}</th>
+					      <div *ngIf="moneyDashboard.totaleBilancio >= 0; then notWarning else warning"></div>
+							<ng-template #notWarning>
+								<th class="text-right text-success">{{moneyDashboard.totaleBilancio | currency:'EUR':"symbol"}}</th>
+							</ng-template>
+							<ng-template #warning>
+								<th class="text-right text-danger">{{moneyDashboard.totaleBilancio | currency:'EUR':"symbol"}}</th>
+							</ng-template>
+					    </tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-4">
+			</div>
+		</div>
+	</section>
+	</div>
+</div>
+
+<ng-template #content let-c="close" let-s="save">
+	<div class="modal-header">
+		<div *ngIf="isNewCategory; then newM else copyM"></div>
+		<ng-template #newM>
+			<h4 class="modal-title">Add Category to the Dashboard</h4>
+		</ng-template>
+		<ng-template #copyM>
+			<h4 class="modal-title">Import Categories to the Dashboard</h4>
+		</ng-template>
+	</div>
+	<div class="modal-body">
+		<form name="form" #newRecordForm="ngForm" (ngSubmit)="create(newRecordForm)">
+			<div class="container-fluid">
+				<div class="row" [hidden]="!isNewMonth">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Import categories from</label>
+							<select class="form-control form-control-sm" id="copyMonth" name="copyMonth" ngModel [disabled]="!isNewMonth">
+								<option *ngFor="let copyMonth of copyMonths" [ngValue]="copyMonth">{{copyMonth.option}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row" [hidden]="!isNewCategory">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Category</label>
+							<select class="form-control form-control-sm" id="newCategory" required name="newCategory" 
+								ngModel [disabled]="!isNewCategory" (ngModelChange)="onCategoryChange($event, newRecordForm)">
+								<option *ngFor="let category of moneyDicCats" [ngValue]="category">{{category.label}} | {{category.tipo}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Budget</label>
+							<input id="budget" type="number" class="form-control form-control-sm" ngModel required  
+								name="budget" [disabled]="!isNewCategory">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success btn-margin" [disabled]="!newRecordForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+</ng-template>
+<ng-template #content2 let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Set Saldo</h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #uSaldoForm="ngForm" (ngSubmit)="uSaldo(uSaldoForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Confirm past month saldo or set it now</label>
+							<input id="saldo" type="number" class="form-control form-control-sm col-md-4" ngModel required  
+								name="saldo" [(ngModel)]="moneyDashboard.saldoPartenza">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success" [disabled]="!uSaldoForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+</ng-template>
+<ng-template #content3 let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Set Budget of category {{currentCategory.category}}</h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #setBudgetForm="ngForm" (ngSubmit)="setBudget(setBudgetForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<label>Budget</label>
+							<input id="budget" type="number" class="form-control form-control-sm col-md-4" ngModel required  
+								name="budget" [(ngModel)]="currentCategory.budget">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success btn-margin" [disabled]="!setBudgetForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+</ng-template>
+</div>

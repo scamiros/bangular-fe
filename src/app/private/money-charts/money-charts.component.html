@@ -1,0 +1,184 @@
+<div class="container-fluid" style="margin-top: 20px;">
+<div class="card">
+	<div class="card-header">
+		<strong>Money Charts</strong>
+	</div>
+	<div class="card-body card-main">
+		<section>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<form name="form" class="form-inline">
+							<div class="form-group">
+								<label>Rapporto Entrate Uscite</label> 
+								<select [compareWith]="compareFnPeriodo" class="form-control form-control-sm mx-sm-3" id="currentPeriodo" required name="currentCategory" 
+									(ngModelChange)="updateBarChartsEU($event)" [ngModel]="currentPeriodo">
+									<option *ngFor="let periodo of listPeriodo" [ngValue]="periodo">{{periodo}}</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="card-body">
+						<div *ngIf="barEULoading; then phBarChartsEU else barChartsEU"></div>
+						<ng-template #phBarChartsEU>
+							<div class="loading-placeholder">
+								<ngx-loading [show]="barEULoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+							</div>
+						</ng-template>
+						<ng-template #barChartsEU>
+							<div *ngIf="barEmpty; then barEmptyEU else barFullEU"></div>
+							<ng-template #barEmptyEU>
+								<div class="empty-placeholder">
+									<p class="text-center">No data available</p>
+								</div>
+							</ng-template>
+							<ng-template #barFullEU>
+								<canvas 
+									baseChart
+									[chartType]="'bar'"
+									[colors]="barChartsEuColors"
+									[datasets]="chartsBarDataset"
+									[labels]="chartsBarLabels"
+									[options]="barChartOpt2"
+									[legend]="true">
+								</canvas>
+							</ng-template>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<form name="form" class="form-inline">
+							<div class="form-group">
+								<label>Risparmio</label> 
+								<select [compareWith]="compareFnPeriodo" class="form-control form-control-sm mx-sm-3" id="currentRisparmioPeriodo" required name="currentCategory" 
+									(ngModelChange)="updateBarChartsRisparmio($event)" [ngModel]="currentRisparmioPeriodo">
+									<option *ngFor="let periodo of listPeriodo" [ngValue]="periodo">{{periodo}}</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="card-body">
+						<div *ngIf="barRisparmioLoading; then phBarChartsRisparmio else barChartsRisparmio"></div>
+						<ng-template #phBarChartsRisparmio>
+							<div class="loading-placeholder">
+								<ngx-loading [show]="barRisparmioLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+							</div>
+						</ng-template>
+						<ng-template #barChartsRisparmio>
+							<div *ngIf="barRisparmioEmpty; then barEmptyRisparmio else barFullRisparmio"></div>
+							<ng-template #barEmptyRisparmio>
+								<div class="empty-placeholder">
+									<p class="text-center">No data available</p>
+								</div>
+							</ng-template>
+							<ng-template #barFullRisparmio>
+								<canvas 
+									baseChart
+									[chartType]="'bar'"
+									[colors]="barChartsRisparmioColors"
+									[datasets]="chartsBarRisparmioDataset"
+									[labels]="chartsBarRisparmioLabels"
+									[options]="barChartOpt"
+									[legend]="true">
+								</canvas>
+							</ng-template>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<form name="form" class="form-inline">
+							<div class="form-group">
+								<label>Distribuzione Mensile per categoria</label> 
+								<select [compareWith]="compareFnCat" class="form-control form-control-sm mx-sm-3" id="currentCategory" required name="currentCategory" 
+									(ngModelChange)="updateBarChartsCategory($event)" [ngModel]="currentCategory">
+									<option *ngFor="let category of listCategories" [ngValue]="category">{{category.label}} | {{category.tipo}}</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="card-body">
+						<div *ngIf="barCatLoading; then phBarChartsCategory else barChartsCategory"></div>
+						<ng-template #phBarChartsCategory>
+							<div class="loading-placeholder">
+								<ngx-loading [show]="barCatLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+							</div>
+						</ng-template>
+						<ng-template #barChartsCategory>
+							<div *ngIf="barCatEmpty; then barEmptyCategory else barFullCategory"></div>
+							<ng-template #barEmptyCategory>
+								<div class="empty-placeholder">
+									<p class="text-center">No data available</p>
+								</div>
+							</ng-template>
+							<ng-template #barFullCategory>
+								<canvas 
+									baseChart
+									[chartType]="'bar'"
+									[data]="barCatData"
+									[colors] ="colors2"
+									[labels]="barCatLabels"
+									[options]="barChartOpt"
+									[legend]="false">
+								</canvas>
+							</ng-template>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-header">
+						<form name="form" #moneyMonthsForm="ngForm" class="form-inline">
+							<div class="form-group">
+								<label>Distribuzione spese per categoria</label> 
+								<select [compareWith]="compareFn" class="form-control form-control-sm mx-sm-3" id="currentMonth" required name="currentMonth" 
+									(ngModelChange)="updatePieChartsCategory($event)" [ngModel]="currentMonth">
+									<option *ngFor="let month of moneyMonths" [ngValue]="month">{{month.option}}</option>
+								</select>
+							</div>
+						</form>
+					</div>
+					<div class="card-body">
+						<div *ngIf="pieLoading; then phPieChartsCategory else pieChartsCategory"></div>
+						<ng-template #phPieChartsCategory>
+							<div class="loading-placeholder">
+								<ngx-loading [show]="pieLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+							</div>
+						</ng-template>
+						<ng-template #pieChartsCategory>
+							<div *ngIf="pieEmpty; then pieEmptyCategory else pieFullCategory"></div>
+							<ng-template #pieEmptyCategory>
+								<div class="empty-placeholder">
+									<p class="text-center">No data available</p>
+								</div>
+							</ng-template>
+							<ng-template #pieFullCategory>
+								<canvas
+									baseChart
+									[chartType]="'pie'"
+									[data]="pieData"
+									[labels]="pieLabels"
+									[options]="chartOptions"
+									[legend]="true"
+									(chartClick)="onChartClick($event)">
+								</canvas>
+							</ng-template>
+						</ng-template>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	</div>
+</div>
+</div>

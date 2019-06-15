@@ -1,0 +1,294 @@
+<ol *ngIf="instaUsers" class="breadcrumb">
+	<li class="breadcrumb-item">Analytics</li> 
+	<li class="breadcrumb-menu d-md-down-none">
+		<a *ngFor="let instaUser of instaUsers" class="btn" href="javascript:void(0)" (click)="instaProfile(instaUser)"> 
+			<img src="{{instaUser.profilePictureURI}}" 
+				[ngClass]="instaUser.id === currentForAvatar.id ? 'img-avatar-insta img-avatar-insta-curr' : 'img-avatar-insta'" />
+		</a> 
+	</li>
+</ol>
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="card">
+		<div class="card-body card-main">
+			<section>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Statistiche</h4>
+										<div *ngIf="currentStatsself" class="small text-muted">Ultimo aggiornamento <strong>{{currentStatsself.lastUpdated}}</strong></div>
+									</div>
+									<div class="col-sm-7 d-none d-md-block">
+										<div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+											<label btnradio="Day" class="btn btn-outline-success ng-valid ng-touched ng-dirty" id="statsDay"
+												(click)="updateStats('day')"
+												[ngClass]="{active: periodLabel === 'day'}">Last Day
+											</label>
+											<label btnradio="Month" class="btn btn-outline-success ng-valid ng-touched ng-dirty" 
+												id="statsWeek" (click)="updateStats('week')"
+												[ngClass]="{active: periodLabel === 'week'}">Last 7 Days
+											</label>
+											<label btnradio="Year" class="btn btn-outline-success ng-valid ng-touched ng-dirty"
+												id="statsMonth" (click)="updateStats('month')"
+												[ngClass]="{active: periodLabel === 'month'}">Last 30 days
+											</label>
+										</div>
+									</div>
+								</div>
+								<div *ngIf="statsLoading; then phStats else stats"></div>
+								<ng-template #phStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="statsLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #stats>
+									<div class="row">
+										<div class="col-sm-6 col-lg-3">
+											<div class="card card-border-info">
+												<div class="card-body">
+													<div class="h1 text-muted text-right mb-4"><i class="icon-people"></i></div>
+													<div class="text-value">
+														{{currentStatsself.followersCount}}
+														<div *ngIf="currentStatsself.followersDiff > 0 then positiveFollowers else warningFollowers"></div>
+														<ng-template #positiveFollowers>
+															<span class="text-success float-right">+{{currentStatsself.followersDiff}}</span>
+														</ng-template>
+														<ng-template #warningFollowers>
+															<div *ngIf="currentStatsself.followersDiff == 0 then zeroFollowers else negativeFollowers"></div>
+															<ng-template #zeroFollowers>
+																<span class="text-warning float-right">{{currentStatsself.followersDiff}}</span>
+															</ng-template>
+															<ng-template #negativeFollowers>
+																<span class="text-danger float-right">{{currentStatsself.followersDiff}}</span>
+															</ng-template>
+														</ng-template>
+													</div>
+													<small class="text-muted text-uppercase font-weight-bold">Followers {{periodLabel}}</small>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-lg-3">
+											<div class="card card-border-warning">
+												<div class="card-body">
+													<div class="h1 text-muted text-right mb-4"><i class="icon-people"></i></div>
+													<div class="text-value">
+														{{currentStatsself.followingCount}}
+														<div *ngIf="currentStatsself.followingDiff > 0 then positiveFollowing else warningFollowing"></div>
+														<ng-template #positiveFollowing>
+															<span class="text-success float-right">+{{currentStatsself.followingDiff}}</span>
+														</ng-template>
+														<ng-template #warningFollowing>
+															<div *ngIf="currentStatsself.followingDiff == 0 then zeroFollowing else negativeFollowing"></div>
+															<ng-template #zeroFollowing>
+																<span class="text-warning float-right">{{currentStatsself.followingDiff}}</span>
+															</ng-template>
+															<ng-template #negativeFollowing>
+																<span class="text-danger float-right">{{currentStatsself.followingDiff}}</span>
+															</ng-template>
+														</ng-template>
+													</div>
+													<small class="text-muted text-uppercase font-weight-bold">Following {{periodLabel}}</small>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-lg-3">
+											<div class="card card-border-danger">
+												<div class="card-body">
+													<div class="h1 text-muted text-right mb-4"><i class="icon-heart"></i></div>
+													<div class="text-value">
+														{{currentStatsself.likesCount}}
+														<div *ngIf="currentStatsself.likesDiff > 0 then positiveLikes else warningLikes"></div>
+														<ng-template #positiveLikes>
+															<span class="text-success float-right">+{{currentStatsself.likesDiff}}</span>
+														</ng-template>
+														<ng-template #warningLikes>
+															<div *ngIf="currentStatsself.likesDiff == 0 then zeroLikes else negativeLikes"></div>
+															<ng-template #zeroLikes>
+																<span class="text-warning float-right">{{currentStatsself.likesDiff}}</span>
+															</ng-template>
+															<ng-template #negativeLikes>
+																<span class="text-danger float-right">{{currentStatsself.likesDiff}}</span>
+															</ng-template>
+														</ng-template>
+													</div>
+													<small class="text-muted text-uppercase font-weight-bold">Likes {{periodLabel}}</small>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-lg-3">
+											<div class="card card-border-success">
+												<div class="card-body">
+													<div class="h1 text-muted text-right mb-4"><i class="icon-bubbles"></i></div>
+													<div class="text-value">
+														{{currentStatsself.commentsCount}}
+														<div *ngIf="currentStatsself.commentsDiff > 0 then positiveComments else warningComments"></div>
+														<ng-template #positiveComments>
+															<span class="text-success float-right">+{{currentStatsself.commentsDiff}}</span>
+														</ng-template>
+														<ng-template #warningComments>
+															<div *ngIf="currentStatsself.commentsDiff == 0 then zeroComments else negativeComments"></div>
+															<ng-template #zeroComments>
+																<span class="text-warning float-right">{{currentStatsself.commentsDiff}}</span>
+															</ng-template>
+															<ng-template #negativeComments>
+																<span class="text-danger float-right">{{currentStatsself.commentsDiff}}</span>
+															</ng-template>
+														</ng-template>
+													</div>
+													<small class="text-muted text-uppercase font-weight-bold">Comments {{periodLabel}}</small>
+												</div>
+											</div>
+										</div>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Followers Growth section -->
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Followers Growth</h4>
+									</div>
+									<div class="col-sm-7 d-md-block">
+										<div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+											<label btnradio="Last 7 Days" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" id="followersGroDay" 
+												(click)="updateFollowersGro('day')" aria-pressed="true"
+												[ngClass]="{active: periodFollowersLabel === 'day'}">Last 7 Days
+											</label>
+											<label btnradio="Current Month" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+												id="followersGroMonth" aria-pressed="false" (click)="updateFollowersGro('month')" aria-pressed="false"
+												[ngClass]="{active: periodFollowersLabel === 'month'}">Current Month
+											</label>
+											<label btnradio="Current Year" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+												id="followersGroYear" aria-pressed="false" (click)="updateFollowersGro('year')" aria-pressed="false"
+												[ngClass]="{active: periodFollowersLabel === 'year'}">Current Year
+											</label>
+										</div> 
+									</div>
+								</div>
+								<div *ngIf="followersGroLoading; then phFollStats else follStats"></div>
+								<ng-template #phFollStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="followersGroLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #follStats>
+									<div *ngIf="followersGroLabels.length > 0">
+										<canvas 
+											baseChart
+											[chartType]="'bar'"
+											[datasets]="followersGroData"
+											[labels]="followersGroLabels"
+											[options]="lineChartOpt"
+											[colors] = "followsGroColors"
+											[legend]="false">
+										</canvas>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Comments History</h4>
+									</div>
+									<div class="col-sm-7 d-md-block">
+										<div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+											<label btnradio="Last 7 Days" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty"
+												aria-pressed="true" (click)="updateCommentsHistory('day')"
+												[ngClass]="{active: periodCommentsHistoryLabel === 'day'}">Last 7 Days
+											</label>
+											<label btnradio="Current Month" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+												aria-pressed="false" (click)="updateCommentsHistory('month')"
+												[ngClass]="{active: periodCommentsHistoryLabel === 'month'}">Current Month
+											</label>
+											<label btnradio="Current Year" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+												aria-pressed="false" (click)="updateCommentsHistory('year')"
+												[ngClass]="{active: periodCommentsHistoryLabel === 'year'}">Current Year
+											</label>
+										</div> 
+									</div>
+								</div>
+								<div *ngIf="commentsHistoryLoading; then phCommentsStats else commentsStats"></div>
+								<ng-template #phCommentsStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="commentsHistoryLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #commentsStats>
+									<div *ngIf="commentsHistoryLabels.length > 0">
+										<canvas 
+											baseChart
+											[chartType]="'bar'"
+											[datasets]="commentsHistoryData"
+											[labels]="commentsHistoryLabels"
+											[options]="lineChartOpt"
+											[colors] = "commentsHistoryColors"
+											[legend]="false">
+										</canvas>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Likes History</h4>
+									</div>
+									<div class="col-sm-7 d-md-block">
+										<div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+											<label btnradio="Last 7 Days" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty"
+												aria-pressed="true" (click)="updateLikesHistory('day')"
+												[ngClass]="{active: periodLikesHistoryLabel === 'day'}">Last 7 Days
+											</label>
+											<label btnradio="Current Month" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+												aria-pressed="false" (click)="updateLikesHistory('month')"
+												[ngClass]="{active: periodLikesHistoryLabel === 'month'}">Current Month
+											</label>
+											<label btnradio="Current Year" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+												aria-pressed="false" (click)="updateLikesHistory('year')"
+												[ngClass]="{active: periodLikesHistoryLabel === 'year'}">Current Year
+											</label>
+										</div> 
+									</div>
+								</div>
+								<div *ngIf="likesHistoryLoading; then phLikesStats else likesStats"></div>
+								<ng-template #phLikesStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="likesHistoryLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #likesStats>
+									<div *ngIf="likesHistoryLabels.length > 0">
+										<canvas 
+											baseChart
+											[chartType]="'bar'"
+											[datasets]="likesHistoryData"
+											[labels]="likesHistoryLabels"
+											[options]="lineChartOpt"
+											[colors] = "likesHistoryColors"
+											[legend]="false">
+										</canvas>
+									</div>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div> 
+</div>									

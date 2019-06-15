@@ -1,0 +1,227 @@
+<div class="container-fluid" style="margin-top: 20px;">
+<div class="card">
+	<div class="card-header">
+		<form name="form" #instaPodGroupsForm="ngForm" class="form-inline float-right">
+			<div class="form-group">
+				<label>Current Group</label> 
+				<select [compareWith]="compareFn" class="form-control form-control-sm mx-sm-3" id="currentGroup" required name="currentGroup" 
+					(ngModelChange)="onGroupChange($event)" [ngModel]="currentGroup">
+					<option *ngFor="let group of instaPodGroupsList" [ngValue]="group"
+					>{{group.groupName}}</option>
+				</select>
+			</div>
+		</form>
+		<button class="btn btn-success btn-sm float-right btn-margin" (click)="openNewGroup(content)"><i class="fa fa-plus"></i> New Group</button>
+	</div>
+	<div class="card-body card-main">
+		<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+		<section *ngIf="currentGroupBean">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+	                    <div class="card-header">
+	                    	<strong>Group: {{currentGroupBean.group.groupName}}</strong>
+	                      	<!-- <button class="btn btn-outline-success btn-sm float-right btn-margin" (click)="openNewMember(content, group"><i class="fa fa-plus"></i></button> -->
+	                      	<button class="btn btn-warning btn-sm float-right btn-margin" (click)="openNewContent(contentContent)"><i class="fa fa-plus margin-right-5"></i> <i class="fa fa-camera"></i></button>
+	                      	<button class="btn btn-info btn-sm float-right btn-margin" (click)="openNewMember(contentMember)"><i class="fa fa-plus margin-right-5"></i> <i class="fa fa-user"></i></button>
+	                      	<p>Members: {{currentGroupBean.members.length}}</p>
+	                      	<p class="avatar-minus">
+	                      		<span *ngFor="let member of currentGroupBean.members" class=" mr-10">
+	                      			<a class="btn"> 
+										<img src="{{member.instagramPodUser.profilePicture}}" class="img-avatar-insta img-avatar-insta-curr margin-top-5" placement="top" ngbTooltip="{{member.instagramPodUser.username}}"/>
+									</a>
+									<span style="margin-top: -5px; margin-left: -6px; position: absolute;">
+										<a class="btn" style="color: #f86c6b" (click)="removeMember(member)" placement="top" ngbTooltip="Remove"> 
+											<i class="fa fa-times"></i>
+										</a>
+									</span>
+	                      		</span>
+	                      		
+							</p>
+	                    </div>
+	                    <div class="card-body">
+	                    	<div *ngIf="currentGroupBean.contents.length > 0">
+	                    	<div class="row margin-bottom-20 border-btm" *ngFor="let content of currentGroupBean.contents">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-3">
+											<img src="{{content.contentUri}}" class="img-fluid card-img-top insta-img-pod insta-img-cover" />
+										</div>
+										<div class="col-md-9">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="media insta-media">
+														<img class="align-self-start mr-3 img-avatar-insta img-avatar-insta-curr" 
+															src="{{content.instagramPodMember.instagramPodUser.profilePicture}}">
+														<div class="media-body">
+															<h5 class="mt-0">{{content.instagramPodMember.instagramPodUser.username}}</h5>
+															<p class="small text-muted">{{content.dtPosted | date:'short'}}</p>
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- <div class="row">
+												<div class="col-md-12">
+													<p class="text-muted"><i class="fa fa-heart"></i> Likes {{content.likes}}</p>
+													<p class="avatar-minus"><span *ngFor="let action of content.actions">
+														<a class="btn" *ngIf="action.like == 0" (click)="postLike(action)"> 
+															<img src="{{action.instagramPodMember.instagramPodUser.profilePicture}}" class="img-avatar-insta-post margin-right-m4 margin-top-5" placement="top" ngbTooltip="{{action.instagramPodMember.instagramPodUser.username}}"/>
+														</a>
+													</span></p>
+												</div>
+											</div> -->
+											<div class="row">
+												<div class="col-md-12">
+													<p class="text-muted"><i class="fa fa-comment"></i> Comments {{content.comments}}</p>
+													<p class="avatar-minus"><span *ngFor="let action of content.actions">
+														<a class="btn" *ngIf="action.comment == 0" (click)="postComment(action)"> 
+															<img src="{{action.instagramPodMember.instagramPodUser.profilePicture}}" class="img-avatar-insta-post margin-right-m4 margin-top-5" placement="top" ngbTooltip="{{action.instagramPodMember.instagramPodUser.username}}"/>
+														</a>
+													</span></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div> 
+							</div>
+							</div>
+							<div class="row" style="margin-top: 20px;" *ngIf="currentGroupBean.contents.length == 0">
+								<div class="col-md-12">
+									<h4 class="text-center text-muted">No Content available</h4>
+								</div> 
+							</div>
+	                    </div>
+	                 </div>
+	             </div>
+			</div>
+		</section>
+	</div>
+</div>
+
+<ng-template #content let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Create new Group</h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #newGroupForm="ngForm" (ngSubmit)="createGroup(newGroupForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>Group Name</label>
+							<input id="groupName" type="text" class="form-control form-control-sm" ngModel required name="groupName">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success btn-margin" [disabled]="!newGroupForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+<ng-template #contentMember let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Add new member to <strong>{{currentGroup.groupName}}</strong></h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #newMemberForm="ngForm" (ngSubmit)="createMember(newMemberForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>User</label>
+							<ng-select [items]="usersList"
+							           bindLabel="username"
+							           ngModel required name="instagramPodUser">
+							    <ng-template ng-label-tmp let-item="item">
+							        <img src="{{item.profilePicture}}" class="img-avatar-insta-select margin-right-5" />
+	        							<span>{{item.username}}</span>
+							    </ng-template>
+								<ng-template ng-option-tmp let-item="item" let-index="index">
+	        						<span>
+	        							<img src="{{item.profilePicture}}" class="img-avatar-insta img-avatar-insta-curr margin-right-5" />
+	        							<span>{{item.username}}</span>
+	        						</span>
+	    						</ng-template>
+							</ng-select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success btn-margin" [disabled]="!newMemberForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+<ng-template #contentContent let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Add new content to <strong>{{currentGroup.groupName}}</strong></h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #newContentForm="ngForm" (ngSubmit)="createContent(newContentForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+						<label>User</label>
+						<ng-select [items]="memberList"
+							bindLabel="username"
+							bindValue="idPodMember"
+							ngModel required name="instagramPodMember">
+						    <ng-template ng-label-tmp let-item="item">
+						        <img src="{{item.profilePicture}}" class="img-avatar-insta-select margin-right-5" />
+        							<span>{{item.username}}</span>
+						    </ng-template>
+							<ng-template ng-option-tmp let-item="item" let-index="index">
+        						<span>
+        							<img src="{{item.profilePicture}}" class="img-avatar-insta img-avatar-insta-curr margin-right-5" />
+        							<span>{{item.username}}</span>
+        						</span>
+    						</ng-template>
+						</ng-select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>Posted Date</label>
+							<input id="dtPosted" type="text" class="form-control form-control-sm" ngModel required name="dtPosted" 
+								bsDatepicker [bsConfig]="{dateInputFormat: 'DD/MM/YYYY HH:mm:ss'}">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div class="form-group">
+							<label>Content url</label>
+							<input id="contentUri" type="text" class="form-control form-control-sm" ngModel required name="contentUri">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success btn-margin" [disabled]="!newContentForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+</div>
+

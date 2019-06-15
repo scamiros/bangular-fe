@@ -1,0 +1,77 @@
+<div class="container-fluid" style="margin-top: 20px;">
+<div class="card">
+	<div class="card-header">
+		<strong>Dictionary Categories</strong>
+		<button class="btn btn-success btn-sm float-right" (click)="openCreateDicCat(content4)"><i class="fa fa-plus"></i>  Add Category Record</button>
+	</div>
+	<div class="card-body card-main">
+		<section>
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-striped table-sm">
+				<thead>
+					<tr class="table-info">
+						<th class="text-left">Label</th>
+						<th class="text-center">Type</th>
+						<th class="text-right">Functions</th>
+					</tr>
+				</thead>
+				<tbody>
+				    <tr *ngFor="let category of moneyDicCats">
+				    	<td>
+						  	{{category.label}}
+						</td>
+						<td class="text-center"> 
+						  	{{category.tipo}}
+						</td>
+						<td class="text-right">
+							<button class="btn btn-outline-warning btn-sm" (click)="updateDicCat"><i class="fa fa-pencil"></i></button>
+							<button class="btn btn-outline-danger btn-sm" (click)="deleteDicCat"><i class="fa fa-times"></i></button>
+						</td>
+				    </tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</section>
+	</div> 
+</div>
+<ng-template #content4 let-c="close" let-s="save">
+	<div class="modal-header">
+		<h4 class="modal-title">Create new Dictionary Category</h4>
+	</div>
+	<div class="modal-body">
+		<form name="form" #createDicCatForm="ngForm" (ngSubmit)="createDicCat(createDicCatForm)">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Label</label>
+							<input id="label" type="text" class="form-control form-control-sm" ngModel required  
+								name="label">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Type</label>
+							<select id="tipo" type="text" class="form-control form-control-sm" ngModel required  
+								name="tipo">
+								<option>U</option>
+								<option>E</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="float-right">
+							<input type="submit" value="Save" class="btn btn-sm btn-outline-success" [disabled]="!createDicCatForm.valid">
+							<button type="button" class="btn btn-sm btn-outline-secondary" (click)="c('Close click')">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+</div>

@@ -1,0 +1,134 @@
+<ol *ngIf="instaUsers" class="breadcrumb">
+	<li class="breadcrumb-item">Profile</li>
+	<li class="breadcrumb-menu d-md-down-none">
+		<a *ngFor="let instaUser of instaUsers" class="btn" href="javascript:void(0)" (click)="instaProfile(instaUser)"> 
+			<img src="{{instaUser.profilePictureURI}}" 
+				[ngClass]="instaUser.id === currentForAvatar.id ? 'img-avatar-insta img-avatar-insta-curr' : 'img-avatar-insta'" />
+		</a> 
+	</li>
+</ol>
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="card">
+		<div class="card-body card-main">
+			<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
+			<section *ngIf="currentInstaUser">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row justify-content-md-center">
+							<div class="col-lg-3">
+								<img src="{{currentInstaUser.profilePictureURI}}" class="img-responsive rounded-circle" />
+							</div>
+							<div class="col-md-auto">
+								<div class="insta-info">
+									<div class="insta-info-header">{{currentInstaUser.userName}}</div>
+									<div class="insta-info-body">
+										<div class="insta-text-el">
+											<div class="insta-info-text">{{currentInstaUser.mediaCountString}}</div>
+											<div class="text-muted">post</div>
+										</div>
+										<div class="insta-text-el">
+											<div class="insta-info-text">{{currentInstaUser.followerCountString}}</div>
+											<div class="text-muted">follower</div>
+										</div>
+										<div class="insta-text-el">
+											<div class="insta-info-text">{{currentInstaUser.followingCountString}}</div>
+											<div class="text-muted">seguiti</div>
+										</div>
+									</div>
+									<div class="insta-info-bio">
+										<div class="insta-text-el">
+											<div class="insta-info-text">{{currentInstaUser.bio}}</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="margin-top: 20px;">
+							<div class="col-md-4" *ngFor="let media of currentInstaUser.media">
+								<a class="btn insta-post" (click)="openInstaMedia(content, media)">
+									<div class="card" style="width: 18rem;">
+										<img src="{{media.uriLow}}" class="card-img-top insta-img insta-img-cover" />
+										<div class="card-body">
+											<p class="card-title">
+												<span class="span-space text-muted"><i class="fa fa-heart color-red"></i> {{media.likesCount}}</span>
+												<span class="text-muted"><i class="fa fa-comment"></i> {{media.commentsCount}}</span><br>
+												<span class="text-muted small">{{media.createdTimestamp}}</span>
+											</p>
+											<!-- <p class="card-text">
+												<span style="margin-right: 5px;" *ngFor="let tag of media.tags">#{{tag}}</span>
+											</p> -->
+										</div>
+									</div>
+								</a>
+							</div> 
+						</div>
+					</div>
+				</div>
+			</section>
+			<section *ngIf="noInstausers">
+				<div class="row justify-content-md-center">
+					<div class="col-md-3"></div>
+					<div class="col-md-auto">
+						<div class="card text-center" style="width: 18rem;">
+							<div class="card-body">
+								<h5 class="card-title">Instagram</h5>
+								<p class="card-text">
+									Add your instagram user to check analytics data
+								</p>
+								<a href="#" class="btn btn-success"><i class="fa fa-plus-circle fa-4x"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3"></div>
+				</div>
+			</section>
+		</div>
+	</div>
+	<ng-template #content let-c="close" let-s="save">
+		<div class="modal-body">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-8">
+						<img *ngIf="currentMedia.type == 'image'" src="{{currentMedia.uriStandard}}" class="img-fluid img-full" />
+						<video *ngIf="currentMedia.type == 'video'" class="img-fluid img-full" autoplay><source src="{{currentMedia.uriVideo}}" type="video/mp4"></video>
+						<div *ngIf="currentMedia.type == 'carousel'" id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+							<carousel [noWrap]="true" [showIndicators]="false">
+							  	<slide *ngFor="let image of currentMedia.instagramImage" class="slide img-fluid img-full">
+									<img src="{{image.uri}}">
+								</slide>
+							</carousel>
+						</div>
+					</div>					
+					<div class="col-md-4">
+						<button type="button" class="close" (click)="c('Close click')"><span aria-hidden="true">&times;</span></button>
+						<div class="media insta-media">
+							<img class="align-self-start mr-3 img-avatar-insta img-avatar-insta-curr" src="{{currentInstaUser.profilePictureURI}}">
+							<div class="media-body">
+								<h5 class="mt-0">{{currentInstaUser.userName}}</h5>
+								<p class="small text-muted" *ngIf="currentMedia.location">{{currentMedia.location}}</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<p>{{currentMedia.caption}}</p>
+								<!-- <p class="card-text">
+									<span style="margin-right: 5px;" *ngFor="let tag of currentMedia.tags">#{{tag}}</span>
+								</p> -->
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<p class="card-title">
+									<span class="span-space"><i class="fa fa-heart color-red"></i> {{currentMedia.likesCount}}</span>
+									<span ><i class="fa fa-comment"></i> {{currentMedia.commentsCount}}</span><br>
+									<span class=" small">{{currentMedia.createdTimestamp}}</span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ng-template>
+</div>

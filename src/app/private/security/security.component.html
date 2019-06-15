@@ -1,0 +1,78 @@
+<!-- Page Header-->
+<header class="page-header">
+	<div class="container-fluid">
+		<h2 class="no-margin-bottom">Security</h2>
+	</div>
+</header>
+<section>
+	<div class="container-fluid">
+		<div [hidden]="!submitted">
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<strong>Password changed successfully!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="times">&times;</span>
+				</button>
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-close">
+					<div class="dropdown">
+						<button type="button" id="closeCard" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+							class="dropdown-toggle">
+							<i class="fa fa-ellipsis-v"></i>
+						</button>
+						<div aria-labelledby="closeCard" class="dropdown-menu has-shadow">
+							<a href="#" class="dropdown-item remove"> <i class="fa fa-times"></i>Close
+							</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="card-header d-flex align-items-center">
+					<h3 class="h4">Change password</h3>
+				</div>
+				<div class="card-body">
+					<form name="form" (ngSubmit)="onSubmit(userProfileForm)" #userProfileForm="ngForm">
+					<input id="username" type="hidden" name="username" [(ngModel)]="userProfile && userProfile.username">
+						<div class="form-row">
+							<div class="col-lg-4">  
+								<div class="form-group">
+									<label class="form-control-label">New password</label> 
+									<input id="password" type="password" class="form-control form-control-sm"
+										required validateEqual="confirmPassword" reverse="true" name="password" #password="ngModel" [(ngModel)]="userProfile && userProfile.password">
+									<div [hidden]="password.valid || (password.pristine && !userProfileForm.submitted)" class="alert alert-danger">
+								        Password is required
+								    </div>
+									<!-- <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+										<div *ngIf="password.errors.required">Password is Required</div>
+										<div *ngIf="password.errors.validateEqual">Password mismatch</div>
+									</div>-->
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label class="form-control-label">Confirm new password</label> 
+									<input id="confirmPassword" type="password" class="form-control form-control-sm" [(ngModel)]="userProfile && userProfile.confirmPassword"
+										required validateEqual="password" name="confirmPassword" #confirmPassword="ngModel">
+									<div [hidden]="confirmPassword.valid || (confirmPassword.pristine && !userProfileForm.submitted)" class="alert alert-danger">
+								        Password mismatch
+								    </div>
+									<!-- <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" class="alert alert-danger">
+										<div *ngIf="confirmPassword.errors.required">Confirm Password is Required</div>
+										<div *ngIf="confirmPassword.errors.validateEqual">Confirm Password mismatch</div>
+									</div>-->
+								</div>
+							</div>
+						</div>
+						<div class="form-group float-right">
+							<input type="submit" value="Save" class="btn btn-success" [disabled]="!userProfileForm.form.valid">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

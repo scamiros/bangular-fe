@@ -1,0 +1,167 @@
+<div class="container-fluid" style="margin-top: 20px;">
+	<div class="card">
+		<div class="card-header">
+			<form name="form" #instaPodStatsForm="ngForm" (ngSubmit)="updatePodStatsDate(instaPodStatsForm)" class="form-inline">
+				<div class="form-group">
+					<label>Current Group</label> 
+					<select [compareWith]="compareFn" class="form-control form-control-sm mx-sm-3" id="currentGroup" required name="currentGroup" 
+						(ngModelChange)="onGroupChange($event)" [ngModel]="currentGroup">
+						<option *ngFor="let group of instaPodGroupsList" [ngValue]="group"
+						>{{group.groupName}}</option>
+					</select>
+				</div>
+				<!-- <div class="btn-group btn-group-toggle float-right mr-3" data-toggle="buttons">
+					<label btnradio="Last 7 Days" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+						(click)="updatePodStats('EVER')" aria-pressed="true"
+						[ngClass]="{active: periodCommentsLabel === 'EVER'}">EVER
+					</label>
+					<label btnradio="Last 7 Days" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+						(click)="updatePodStats('WEEK')" aria-pressed="true"
+						[ngClass]="{active: periodCommentsLabel === 'WEEK'}">Last Week
+					</label>
+					<label btnradio="Current Month" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+						aria-pressed="false" (click)="updatePodStats('MONTH')" aria-pressed="false"
+						[ngClass]="{active: periodCommentsLabel === 'MONTH'}">Last Month
+					</label>
+					<label btnradio="Current Year" class="btn btn-sm btn-outline-success ng-valid ng-touched ng-dirty" 
+						aria-pressed="false" (click)="updatePodStats('YEAR')" aria-pressed="false"
+						[ngClass]="{active: periodCommentsLabel === 'YEAR'}">Last Year
+					</label>
+				</div>  -->
+				<div class="form-group float-right">
+					<label>From</label>
+					<input id="dtFrom" type="text" class="form-control form-control-sm mx-sm-3" ngModel required name="dtFrom" 
+						bsDatepicker 
+						[bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+						[bsValue]="dtFrom">
+					<label>To</label>
+					<input id="dtTo" type="text" class="form-control form-control-sm mx-sm-3" ngModel required name="dtTo" 
+						bsDatepicker 
+						[bsConfig]="{dateInputFormat: 'DD/MM/YYYY'}"
+						[bsValue]="dtTo">
+				</div>
+				<input type="submit" value="Search" class="btn btn-sm btn-success btn-margin">
+			</form>
+		</div>
+		<div class="card-body card-main">
+			<section>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Best Commenters</h4>
+									</div>
+								</div>
+								<div *ngIf="commentsLoading; then phFollStats else follStats"></div>
+								<ng-template #phFollStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="commentsLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #follStats>
+									<canvas 
+										baseChart
+										[chartType]="'horizontalBar'"
+										[datasets]="commentsData"
+										[labels]="commentsLabels"
+										[options]="lineChartOpt"
+										[colors] = "commentsColors"
+										[legend]="false">
+									</canvas>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Best Commented</h4>
+									</div>
+								</div>
+								<div *ngIf="starsLoading; then phStars else follStars"></div>
+								<ng-template #phStars>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="starsLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #follStars>
+									<canvas 
+										baseChart
+										[chartType]="'horizontalBar'"
+										[datasets]="starsData"
+										[labels]="starsLabels"
+										[options]="lineChartOpt"
+										[colors] = "starsColors"
+										[legend]="false">
+									</canvas>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Best Likers</h4>
+									</div>
+								</div>
+								<div *ngIf="likesLoading; then phStats else stats"></div>
+								<ng-template #phStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="likesLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #stats>
+									<canvas 
+										baseChart
+										[chartType]="'horizontalBar'"
+										[datasets]="likesData"
+										[labels]="likesLabels"
+										[options]="lineChartOpt"
+										[colors] = "likesColors"
+										[legend]="false">
+									</canvas>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="card card-chart">
+							<div class="card-body">
+								<div class="row" style="margin-bottom: 20px;">
+									<div class="col-sm-5">
+										<h4 class="card-title mb-0">Comment Gap</h4>
+									</div>
+								</div>
+								<div *ngIf="commentsGapLoading; then phGapStats else gapStats"></div>
+								<ng-template #phGapStats>
+									<div class="loading-placeholder">
+										<ngx-loading [show]="commentsGapLoading" [config]="{ fullScreenBackdrop: false, backdropBorderRadius: '10px' }"></ngx-loading>
+									</div>
+								</ng-template>
+								<ng-template #gapStats>
+									<canvas 
+										baseChart
+										[chartType]="'horizontalBar'"
+										[datasets]="commentsGapData"
+										[labels]="commentsGapLabels"
+										[options]="lineChartOpt"
+										[colors] = "commentsGapColors"
+										[legend]="false">
+									</canvas>
+								</ng-template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div> 
+</div>									
