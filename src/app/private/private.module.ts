@@ -1,12 +1,15 @@
 import {NgModule, ModuleWithProviders} from '@angular/core';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {deLocale} from 'ngx-bootstrap/locale';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 defineLocale('it', deLocale);
 
 import {CommonModule} from '@angular/common';
 
 import {FormsModule} from '@angular/forms';
 //import {ConfirmationModalModule} from 'ng-confirmation-modal';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import {LocationStrategy, HashLocationStrategy} from '@angular/common';
 import {NgxLoadingModule, ngxLoadingAnimationTypes} from 'ngx-loading';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -108,8 +111,10 @@ import { InstaPodUsersService } from './insta-pod-users/insta-pod-users.service'
       modalSize: 'sm',
       modalClass: ''
     }), */
+    ModalModule.forRoot(),
     CarouselModule.forRoot(),
     NgxDatatableModule,
+    BrowserAnimationsModule,
     PrivateRoutingModule
   ],
   declarations: [

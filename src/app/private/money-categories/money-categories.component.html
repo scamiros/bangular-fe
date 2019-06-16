@@ -98,10 +98,10 @@
 											  	{{transaction.amount | currency:'EUR':"symbol"}}
 											</td>
 											<td class="text-right" style="width: 10px;">
-											  	<!-- <button ngConfirm [title]="'Confirm'" [message]="'Are you sure delete transaction ' + transaction.transaction + '?'" (onConfirm)="deleteTransaction(transaction)"
-							  						 class="btn btn-outline-danger btn-xsm">
+											  	<button (click)="openDelTransaction(contentTransaction, transaction)"
+							  						 class="btn btn-outline-danger btn-sm">
 							  						<i class="fa fa-times"></i>
-							 					  </button> -->
+							 					  </button>
 											</td>
 									    </tr>
 									    <tr>
@@ -163,6 +163,20 @@
 				</div>
 			</div>
 		</form>
+	</div>
+	
+</ng-template>
+<ng-template #contentTransaction let-c="close" let-s="save" let-modalTransaction>
+	<div class="modal-header">
+		<h4 class="modal-title">Deleting transaction</h4>
+	</div>
+	<div class="modal-body">
+		<p>{{currentTransaction.transaction}} - {{currentTransaction.amount | currency:'EUR':"symbol"}}</p>
+		<p>Are you sure?</p>
+		<p class="float-right">
+			<button type="button" class="btn btn-outline-secondary" (click)="delTransCancel()">Cancel</button>
+			<button type="button" class="btn btn-outline-success ml-2" (click)="delTransConfirm()">Confirm</button>
+		</p>
 	</div>
 	
 </ng-template>

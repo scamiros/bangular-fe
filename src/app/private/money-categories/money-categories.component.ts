@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Routes, RouterModule, Router} from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 import {MoneyCategories} from '../../_models/money/money-categories';
 import {MoneyTransactions} from '../../_models/money/money-transactions';
 import {MoneyMonths} from '../../_models/money/money-months';
@@ -24,6 +26,7 @@ export class MoneyCategoriesComponent implements OnInit {
   moneyCategoriesB: MoneyCategories[];
   newMoneyTransaction: MoneyTransactions;
   currentCategory: MoneyCategories;
+  currentTransaction: MoneyTransactions;
   moneyMonths: MoneyMonths[];
   listTransactions: MoneyTransactions[];
   currentMonth: MoneyMonths = {
@@ -31,6 +34,7 @@ export class MoneyCategoriesComponent implements OnInit {
     option: ''
   };
 
+  modalRef: BsModalRef;
   modalrefTransaction: any;
   responseServer: ResponseServer;
   tempDate: Date;
@@ -53,7 +57,8 @@ export class MoneyCategoriesComponent implements OnInit {
     private moneyCategoriesService: MoneyCategoriesService,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private moneyDashboardService: MoneyDashboardService
+    private moneyDashboardService: MoneyDashboardService,
+    private modalServiceNgx: BsModalService
   ) {
 
   }
@@ -231,6 +236,31 @@ export class MoneyCategoriesComponent implements OnInit {
           this.toastr.error(this.responseServer.message);
         }
       }); 
+  }
+
+  openDelTransaction(template: TemplateRef<any>, t: MoneyTransactions) {
+    this.currentTransaction = t;
+    this.modalrefTransaction = this.modalServiceNgx.show(template);
+  }
+
+  delTransConfirm(): void {
+    this.loading = true;
+    this.moneyCategoriesService.deleteTransaction(this.currentTransaction)
+      .subscribe(data => {
+        this.responseServer = data;
+
+        if (this.responseServer.code === '200') {
+          this.toastr.success(this.responseServer.message);
+          this.updateCategories(this.currentMonth);
+        } else {
+          this.toastr.error(this.responseServer.message);
+        }
+      }); 
+    this.modalrefTransaction.hide();
+  }
+ 
+  delTransCancel(): void {
+    this.modalrefTransaction.hide();
   }
 
   goToDashboard() {
