@@ -36,69 +36,27 @@ export class MoneyDashboardService {
   }
 
   getUserDashboard(currentMonth: MoneyMonths): Observable<MoneyDashboard> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<MoneyDashboard>(this.moneyDashboardUrl, currentMonth, httpOpt);
+    return this.http.post<MoneyDashboard>(this.moneyDashboardUrl, currentMonth);
   }
 
   createDashboard(newDashboard: MoneyDashboardNew): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.moneyCreateDashboardUrl, newDashboard, httpOpt);
+    return this.http.post<ResponseServer>(this.moneyCreateDashboardUrl, newDashboard);
   }
 
   createCategory(cat: MoneyAddCategory): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.moneyCreateCategorydUrl, cat, httpOpt);
+    return this.http.post<ResponseServer>(this.moneyCreateCategorydUrl, cat);
   }
 
   updateMonthDashboard(moneyDashboard: MoneyDashboard): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.moneyUpdateMoneyDashboardUrl, moneyDashboard, httpOpt);
+    return this.http.post<ResponseServer>(this.moneyUpdateMoneyDashboardUrl, moneyDashboard);
   }
 
   updateMonthCategory(moneyCategory: MoneyCategories): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.moneyUpdateMoneyCategoryUrl, moneyCategory, httpOpt);
+    return this.http.post<ResponseServer>(this.moneyUpdateMoneyCategoryUrl, moneyCategory);
   }
 
   getMoneyMonthsCopy(currentMonth: MoneyMonths): Observable<MoneyMonths[]> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<MoneyMonths[]>(this.moneyMonthsCopyUrl, currentMonth, httpOpt);
+    return this.http.post<MoneyMonths[]>(this.moneyMonthsCopyUrl, currentMonth);
   }
 
   getDateFromString(stringDate: string) {

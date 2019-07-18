@@ -22,35 +22,14 @@ export class InstaProfileService {
     private authenticationService: AuthenticationService) {}
 
   getInstaSnap(): Observable<InstaSnap> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaSnap>(this.getInstaSnapUrl, httpOpt);
+    return this.http.get<InstaSnap>(this.getInstaSnapUrl);
   }
 
   getInstaProfile(): Observable<InstaUser> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaUser>(this.getInstaProfileUrl, httpOpt);
+    return this.http.get<InstaUser>(this.getInstaProfileUrl);
   }
 
   getInstaMedia(idMedia: string): Observable<InstaMedia> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaMedia>(this.getInstaMediaUrl + idMedia, httpOpt);
+    return this.http.get<InstaMedia>(this.getInstaMediaUrl + idMedia);
   }
 }

@@ -21,24 +21,10 @@ export class InstaPodChartService {
         private authenticationService: AuthenticationService) { }
 
     getInstaPodStats(search: InstaPodChartBean): Observable<ChartsDatas> {
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };
-        
-        return this.http.post<ChartsDatas>(this.getPodInstaStatsUrl, search, httpOpt);
+        return this.http.post<ChartsDatas>(this.getPodInstaStatsUrl, search);
     }
     
     getInstaPodStars(search: InstaPodChartBean): Observable<ChartsDatas> {
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };
-        
-        return this.http.post<ChartsDatas>(this.getPodInstaStarsUrl, search, httpOpt);
+        return this.http.post<ChartsDatas>(this.getPodInstaStarsUrl, search);
     }
 }

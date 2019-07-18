@@ -27,37 +27,15 @@ export class ProfileService {
     }
 
     getUserProfile() : Observable<UserProfile> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.get<UserProfile>(this.userProfileUrl, httpOpt);
+        return this.http.get<UserProfile>(this.userProfileUrl);
     }
     
     getRoles() : Observable<Role[]> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.get<Role[]>(this.userRolesUrl, httpOpt);
+        return this.http.get<Role[]>(this.userRolesUrl);
     }
     
     saveUser(user: UserProfile): Observable<UserProfile> {
-        
-         const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        }; 
-        
         console.log("prima di invio");
-        return this.http.post<UserProfile>(this.userProfileSaveUrl, user, httpOpt);
+        return this.http.post<UserProfile>(this.userProfileSaveUrl, user);
     }
 }

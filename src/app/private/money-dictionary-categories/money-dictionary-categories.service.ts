@@ -33,47 +33,19 @@ export class MoneyDictionaryCategoriesService {
     }
 
     getMoneyDicCats() : Observable<MoneyDicCategories[]> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.get<MoneyDicCategories[]>(this.moneyDicCatsUrl, httpOpt);
+        return this.http.get<MoneyDicCategories[]>(this.moneyDicCatsUrl);
     } 
     
     createMoneyDicCats(dicCategory: MoneyDicCategories) : Observable<ResponseServer> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.post<ResponseServer>(this.moneyCreateDicCatsUrl, dicCategory, httpOpt);
+        return this.http.post<ResponseServer>(this.moneyCreateDicCatsUrl, dicCategory);
     }
     
     updateMoneyDicCats(dicCategory: MoneyDicCategories) : Observable<ResponseServer> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.post<ResponseServer>(this.moneyUpdateDicCatsUrl, dicCategory, httpOpt);
+        return this.http.post<ResponseServer>(this.moneyUpdateDicCatsUrl, dicCategory);
     }
     
     deleteMoneyDicCats(dicCategory: MoneyDicCategories) : Observable<ResponseServer> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.post<ResponseServer>(this.moneyDeleteDicCatsUrl, dicCategory, httpOpt);
+        return this.http.post<ResponseServer>(this.moneyDeleteDicCatsUrl, dicCategory);
     }
     
     

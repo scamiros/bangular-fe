@@ -29,91 +29,35 @@ export class InstaPodsService {
     private authenticationService: AuthenticationService) {}
 
   getInstaPodGroups(): Observable<InstaPodGroup[]> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaPodGroup[]>(this.getInstaPodGroupsUrl, httpOpt);
+    return this.http.get<InstaPodGroup[]>(this.getInstaPodGroupsUrl);
   }
 
   getInstaPodGroup(group: InstaPodGroup): Observable<InstaPodGroupBean> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<InstaPodGroupBean>(this.getInstaPodGroupUrl, group, httpOpt);
+    return this.http.post<InstaPodGroupBean>(this.getInstaPodGroupUrl, group);
   }
 
   createMember(t: InstaPodMember): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.createInstaPodMemberUrl, t, httpOpt);
+    return this.http.post<ResponseServer>(this.createInstaPodMemberUrl, t);
   }
     
   removeMember(t: InstaPodMember): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.removeInstaPodMemberUrl, t, httpOpt);
+    return this.http.post<ResponseServer>(this.removeInstaPodMemberUrl, t);
   }
 
   postPodAction(t: InstaPodAction): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.postInstaPodActionUrl, t, httpOpt);
+    return this.http.post<ResponseServer>(this.postInstaPodActionUrl, t);
   }
 
   getPodActions(t: InstaPodContent): Observable<InstaPodAction[]> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<InstaPodAction[]>(this.getInstaPodActionsUrl, t, httpOpt);
+    return this.http.post<InstaPodAction[]>(this.getInstaPodActionsUrl, t);
   }
 
   createGroup(t: InstaPodGroup): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.createInstaPodGroupUrl, t, httpOpt);
+    return this.http.post<ResponseServer>(this.createInstaPodGroupUrl, t);
   }
 
   createContent(t: InstaPodContent): Observable<ResponseServer> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ResponseServer>(this.createInstaPodContentUrl, t, httpOpt);
+    return this.http.post<ResponseServer>(this.createInstaPodContentUrl, t);
   }
 
 }

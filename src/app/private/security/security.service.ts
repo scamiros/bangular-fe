@@ -24,14 +24,8 @@ export class SecurityService {
 
     updateUserPassword(user: UserProfile): Observable<UserProfile> {
         
-         const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        }; 
         console.log(user.username);
         console.log(user.password);
-        return this.http.post<UserProfile>(this.userUpdatePasswordUrl, user, httpOpt);
+        return this.http.post<UserProfile>(this.userUpdatePasswordUrl, user);
     }
 }

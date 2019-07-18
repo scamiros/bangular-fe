@@ -19,24 +19,10 @@ export class InstaAnalyticsService {
     private authenticationService: AuthenticationService) {}
 
   getInstaUserself(period: string): Observable<InstaStatsself> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaStatsself>(this.getInstaSelfUrl + period, httpOpt);
+    return this.http.get<InstaStatsself>(this.getInstaSelfUrl + period);
   }
 
   getInstaStats(metric: string, period: string): Observable<ChartsDatas> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<ChartsDatas>(this.getInstaFolloersGroUrl + metric + '/' + period, httpOpt);
+    return this.http.get<ChartsDatas>(this.getInstaFolloersGroUrl + metric + '/' + period);
   }
 }

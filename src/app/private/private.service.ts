@@ -22,39 +22,25 @@ export class PrivateService {
     }
 
     getAdmin() : Observable<UserProfile> {  
-        const httpOpt = {
+        /* const httpOpt = {
             headers: new HttpHeaders({
                 'Content-Type':  'application/json',
                 'Authorization': 'Bearer ' + this.authenticationService.token
             })
-        };    
+        };     */
         // add authorization header with jwt token
         //let headers = new HttpHeaders({ 'Authorization': 'Bearer ' + this.authenticationService.token });
         //let options = new RequestOptions({ headers: headers });
-        return this.http.get<UserProfile>(this.customersUrl, httpOpt);
+        return this.http.get<UserProfile>(this.customersUrl);
            // .pipe(catchError(this.handleError));
     }
     
     getUserProfile() : Observable<UserProfile> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.get<UserProfile>(this.userProfileUrl, httpOpt);
+        return this.http.get<UserProfile>(this.userProfileUrl);
     }
     
     getMenu() : Observable<any> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-       
-        return this.http.get<any>("admin/getMenu", httpOpt);
+        return this.http.get<any>("admin/getMenu");
            // .pipe(catchError(this.handleError));
     }
     

@@ -26,46 +26,18 @@ export class InstaPodUsersService {
         private authenticationService: AuthenticationService) {}
 
     getInstaPodUsers(search: SearchBean): Observable <InstaPodUserPage> {
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };
-            
-        return this.http.post<InstaPodUserPage>(this.getInstaPodUsersUrl, search, httpOpt);
+        return this.http.post<InstaPodUserPage>(this.getInstaPodUsersUrl, search);
     }
     
     getInstaPodUsersList(): Observable <InstaPodUser[]> {
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };
-            
-        return this.http.get<InstaPodUser[]>(this.getInstaPodUsersListUrl, httpOpt);
+        return this.http.get<InstaPodUser[]>(this.getInstaPodUsersListUrl);
     }
     
     managePodUserService(podUser: InstaPodUser) : Observable<ResponseServer> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.post<ResponseServer>(this.postPodUserUrl, podUser, httpOpt);
+        return this.http.post<ResponseServer>(this.postPodUserUrl, podUser);
     }
     
     deletePodUser(podUser: InstaPodUser) : Observable<ResponseServer> {  
-        const httpOpt = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                'Authorization': 'Bearer ' + this.authenticationService.token
-            })
-        };    
-      
-        return this.http.post<ResponseServer>(this.deletePodUserUrl, podUser, httpOpt);
+        return this.http.post<ResponseServer>(this.deletePodUserUrl, podUser);
     }
 }

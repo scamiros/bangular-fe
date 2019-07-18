@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService, AuthenticationService } from '../_services/index';
+import { Store } from '@ngrx/store';
 
 @Component({
     templateUrl: './login.component.html',
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
+        private store: Store<{loggedUser: {}}>,
         private alertService: AlertService) { }
 
     ngOnInit() {

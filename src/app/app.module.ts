@@ -1,7 +1,12 @@
 import {NgModule, LOCALE_ID} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+
+import { StoreModule } from '@ngrx/store';
+import * as fromApp from './store/app.reducer';
+
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app.routing';
@@ -27,7 +32,7 @@ import {SignupComponent} from './signup/signup.component';
 
 @NgModule({
   imports: [
-    FormsModule,
+FormsModule,
     HttpClientModule,
     BrowserModule,
     ToastrModule.forRoot(),
@@ -41,6 +46,7 @@ import {SignupComponent} from './signup/signup.component';
       tertiaryColour: '#666666',
       fullScreenBackdrop: true
     }),
+    StoreModule.forRoot(fromApp.appReducer),
     AppRoutingModule
   ],
   declarations: [
@@ -50,6 +56,7 @@ import {SignupComponent} from './signup/signup.component';
     SignupComponent
   ],
   providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true},
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     {provide: LOCALE_ID, useValue: 'it'},
     AuthGuard,

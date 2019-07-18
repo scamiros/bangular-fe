@@ -40,58 +40,23 @@ export class MoneyChartsService {
   }
 
   getMoneyPieChartsCategory(currentMonth: MoneyMonths): Observable<ChartsPie> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ChartsPie>(this.moneyPieChartsCategoryUrl, currentMonth, httpOpt);
+    return this.http.post<ChartsPie>(this.moneyPieChartsCategoryUrl, currentMonth);
   }
 
   getBarChartsCategory(currentCategory: MoneyDicCategories): Observable<ChartsPie> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ChartsPie>(this.moneyBarChartsCategoryUrl, currentCategory, httpOpt);
+    return this.http.post<ChartsPie>(this.moneyBarChartsCategoryUrl, currentCategory);
   }
 
   getBarChartsEU(periodo: string): Observable<ChartsDatas> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ChartsDatas>(this.moneyBarChartsEUUrl, periodo, httpOpt);
+    return this.http.post<ChartsDatas>(this.moneyBarChartsEUUrl, periodo);
   }
     
   getBarChartsRisparmio(periodo: string): Observable<ChartsDatas> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.post<ChartsDatas>(this.moneyBarChartsRisparmioUrl, periodo, httpOpt);
+    return this.http.post<ChartsDatas>(this.moneyBarChartsRisparmioUrl, periodo);
   }
 
   getMoneyListPeriodo(): Observable<string[]> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<string[]>(this.moneyListPeriodoUrl, httpOpt);
+    return this.http.get<string[]>(this.moneyListPeriodoUrl);
   }
 
 }

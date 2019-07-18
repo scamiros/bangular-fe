@@ -20,24 +20,10 @@ export class InstaContentService {
     private authenticationService: AuthenticationService) {}
 
   getInstaTopTen(metric: string): Observable<InstaUser> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaUser>(this.getInstaTopTenUrl + metric, httpOpt);
+    return this.http.get<InstaUser>(this.getInstaTopTenUrl + metric);
   }
 
   getInstaLastMedia(): Observable<InstaMedia> {
-    const httpOpt = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.authenticationService.token
-      })
-    };
-
-    return this.http.get<InstaMedia>(this.getInstaLastMediaUrl, httpOpt);
+    return this.http.get<InstaMedia>(this.getInstaLastMediaUrl);
   }
 }
